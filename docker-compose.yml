@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+
+  backend:
+    build: ./backend
+    command: >
+      sh -c "python3 manage.py migrate &&
+             python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/code
+      - notused:/code/node_modules
+    stdin_open: true
+    ports:
+      - 3000:3000
+    command: npm start
+    depends_on:
+      - backend
+
+volumes:
+  notused:

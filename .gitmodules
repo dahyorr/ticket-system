@@ -3,4 +3,4 @@
 	url = https://github.com/dahyorr/ticket-system-frontend.git
 [submodule "backend"]
 	path = backend
-	url = https://github.com/dahyorr/ticket-system-api.git
+	url = https://github.com/dahyorr/ticket-system-backend.git

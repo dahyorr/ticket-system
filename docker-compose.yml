@@ -18,13 +18,9 @@ services:
     build: ./frontend
     volumes:
       - ./frontend:/code
-      - notused:/code/node_modules
-    stdin_open: true
+      - /code/node_modules
     ports:
       - 3000:3000
     command: npm start
     depends_on:
       - backend
-
-volumes:
-  notused:

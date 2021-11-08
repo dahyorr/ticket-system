@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:14.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+
+  backend:
+    build: ../backend
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python3 manage.py migrate &&
+             gunicorn tickerrApi.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static_volume:/code/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+    depends_on:
+    - db
+
+  frontend:
+    build: ../frontend
+    command: npm run build
+    volumes:
+      - build:/code/build
+
+  nginx:
+    build: ../nginx
+    volumes:
+      - static_volume:/code/staticfiles
+      - build:/code/build
+    ports:
+      - 5000:80
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:
+  build:
+  static_volume:
